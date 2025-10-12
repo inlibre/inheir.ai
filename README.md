@@ -19,12 +19,7 @@
     </a>
 </div>
 
-InHeir.AI is an intelligent and secure legal tech platform developed to streamline property dispute management and analysis legal professionals and local communities. By harnessing the capabilities of large language models (LLMs) and principles of privacy, the solution stands to ensuring data privacy, security and accuracy by adhering to responsible AI practices while ensuring responses are backed by established legal procedures. InHeir.AI aims to serve globalized requirements by providing a modular platform that can support tailored and updated legal establishments for catering to different needs beyond legal institutions.
-
-> NOTE: Demo instance is available at https://inheir.plumespaces.com
-> To access as an administrator to test the dashboard for property reports, use these credentials:
-> username: admin
-> password: admin
+InHeir.AI is an intelligent and secure legal tech platform developed to streamline property dispute management and analysis for legal professionals and local communities. By harnessing the capabilities of large language models (LLMs) and principles of privacy, the solution stands to ensuring data privacy, security and accuracy by adhering to responsible AI practices while ensuring responses are backed by established legal procedures. InHeir.AI aims to serve globalized requirements by providing a modular platform that can support tailored and updated legal establishments for catering to different needs beyond legal institutions.
 
 # Table of Contents
 
