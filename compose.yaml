@@ -1,0 +1,76 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    volumes:
+      - ../certs:/certs:ro
+      - ../uploads:/backend/uploads
+    develop:
+      watch:
+        - action: rebuild
+          path: ./backend/
+          target: /backend
+        - action: rebuild
+          path: ./backend/uv.lock
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    env_file:
+      - ./backend/.env
+    networks:
+      - network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL:  https://localhost:8000/api/v1
+    volumes:
+      - ../certs:/certs:ro
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    networks:
+      - network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs/localhost.pem:/etc/ssl/certs/localhost.pem:ro
+      - ./certs/localhost-key.pem:/etc/ssl/private/localhost-key.pem:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - network
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - network
+
+volumes:
+  mongo-data:
+
+networks:
+    network:
+        driver: bridge
