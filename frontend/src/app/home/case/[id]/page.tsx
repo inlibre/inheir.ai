@@ -200,7 +200,7 @@ export default function Page() {
       <div className="flex w-full h-full">
         <Toaster toasterId={toasterId} />
         <div className="flex flex-col lg:flex-row w-full h-full">
-          <div className="border-b-2 lg:border-b-0 lg:border-r-2 w-full lg:w-1/3 flex flex-col p-5 lg:p-8 gap-10 lg:overflow-y-auto h-auto lg:min-h-full grow flex-shrink-0">
+          <div className="border-b-2 lg:border-b-0 lg:border-r-2 w-full lg:w-1/3 flex flex-col p-5 lg:p-8 gap-10 lg:overflow-y-auto h-auto lg:min-h-full grow shrink-0">
             <div className="flex flex-col gap-3">
               <h1 className="text-md lg:text-lg font-medium text-gray-600">
                 Case Title
@@ -616,7 +616,7 @@ export default function Page() {
                         </div>
                       </form>
                     </div>
-                    <div className="relative flex-grow min-h-full lg:h-full lg:min-h-0">
+                    <div className="relative grow min-h-full lg:h-full lg:min-h-0">
                       <div className="absolute inset-0" ref={mapContainerRef} />
                     </div>
                     {gisResult && (
