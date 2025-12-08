@@ -47,7 +47,6 @@ InHeir.AI is an intelligent and secure legal tech platform developed to streamli
 11. [**Future Enhancements**](#future-enhancements)
 12. [**Proposal**](#proposal)
 13. [**Contributing**](#contributing)
-14. [**Deployment**](#deployment)
 
 ## Why?
 
@@ -281,22 +280,6 @@ cp backend/.env.sample backend/.env
 ```
 
 -   Build the services as mentioned in the corresponding repositories. For more information regarding local development, check out the README for [frontend](./frontend/README.md) and [backend](backend/README.md)
-
-# Deployment
-
-For information regarding deployment of InHeir.AI on Azure, please check out [our guide](./deployment/README.md) for it which covers dependencies, process and troubleshooting.
-
-# Team
-
--   **Keerthana Rajesh Kumar**:
-    -   [GitHub](https://github.com/grittypuffy)
-    -   [LinkedIn](https://linkedin.com/in/keerthana304)
--   **Shalini Srinivasan**:
-    -   [GitHub](https://github.com/ShaliniSJ)
-    -   [LinkedIn](https://linkedin.com/in/sjshalinisrinivasan/)
--   **Vijay Ganesh S**:
-    -   [GitHub](https://github.com/vg006)
-    -   [LinkedIn](https://linkedin.com/in/vijayganeshs2006/)
 
 ## Licensing
 
