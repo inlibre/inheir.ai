@@ -1,26 +1,23 @@
-import { CreateCase } from '@/lib/components/CreateCaseForm';
-import {
-  Button,
-  Link
-} from '@fluentui/react-components';
-import { useEffect, useState } from 'react';
+import { Button, Link } from "@fluentui/react-components";
+import { useEffect, useState } from "react";
+import { CreateCase } from "@/lib/components/CreateCaseForm";
 
 export const Cases = () => {
   const [cases, setCases] = useState<any[]>([]);
 
   const getCases = async () => {
-    const res: Response = await fetch('/api/v1/case/history', {
-      method: 'GET',
+    const res: Response = await fetch("/api/v1/case/history", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
     });
     if (res.ok) {
       const data = await res.json();
       return data.cases || [];
     } else {
-      console.error('Failed to fetch cases:', res.statusText);
+      console.error("Failed to fetch cases:", res.statusText);
       return [];
     }
   };
@@ -35,7 +32,7 @@ export const Cases = () => {
         }
       })
       .catch((error) => {
-        console.error('Error fetching cases:', error);
+        console.error("Error fetching cases:", error);
         setCases([]);
       });
   }, []);
@@ -46,7 +43,11 @@ export const Cases = () => {
         {cases.length > 0 ? (
           <div className="w-full px-3 py-2 flex flex-col gap-2">
             {cases.map((caseItem, i) => (
-              <Link key={i} href={`/home/case/${caseItem.case_id}`} className="w-full block">
+              <Link
+                key={i}
+                href={`/home/case/${caseItem.case_id}`}
+                className="w-full block"
+              >
                 <Button className="w-full">{caseItem.title}</Button>
               </Link>
             ))}

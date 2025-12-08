@@ -1,38 +1,44 @@
-"use client"
+"use client";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import AppContainer from "@/lib/components/AppContainer";
 import AuthForm from "@/lib/components/AuthForm";
 import { Card } from "@/lib/components/Card";
 import { isSignedIn } from "@/lib/utils";
-import { FeatureData } from "@/lib/validators/types";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import type { FeatureData } from "@/lib/validators/types";
 
 const features: FeatureData[] = [
   {
     title: "AI-Powered Legal Research",
-    description: "Quickly find relevant case law and statutes using advanced AI algorithms.",
+    description:
+      "Quickly find relevant case law and statutes using advanced AI algorithms.",
   },
   {
     title: "Comprehensive Database",
-    description: "Access a vast collection of legal documents, cases, and statutes.",
+    description:
+      "Access a vast collection of legal documents, cases, and statutes.",
   },
   {
     title: "GIS Integration",
-    description: "Leverage geographic information systems to enhance your legal research.",
+    description:
+      "Leverage geographic information systems to enhance your legal research.",
   },
   {
     title: "Document Analysis",
-    description: "Analyze legal documents with AI to extract key information and insights.",
+    description:
+      "Analyze legal documents with AI to extract key information and insights.",
   },
   {
     title: "Secure and Private",
-    description: "Your data is protected with industry-leading security measures.",
+    description:
+      "Your data is protected with industry-leading security measures.",
   },
   {
     title: "Chatbot Assistance",
-    description: "Get instant answers to your legal questions with our AI chatbot.",
-  }
+    description:
+      "Get instant answers to your legal questions with our AI chatbot.",
+  },
 ];
 
 export default function Default() {
@@ -63,8 +69,12 @@ export default function Default() {
         <div className="surround flex flex-col justify-between gap-3">
           <div className="flex flex-col-reverse lg:justify-between lg:pl-20 lg:flex-row items-center justify-center w-full">
             <div className="flex flex-col items-center justify-center lg:items-start gap-3">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">Welcome to Inheir.ai</h1>
-              <p className="text-lg text-center lg:text-left">An AI-powered legal research assistant</p>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
+                Welcome to Inheir.ai
+              </h1>
+              <p className="text-lg text-center lg:text-left">
+                An AI-powered legal research assistant
+              </p>
             </div>
             <div className="content-center flex items-center justify-center w-full lg:w-1/2">
               <DotLottieReact
@@ -78,11 +88,8 @@ export default function Default() {
           <div className="flex flex-col w-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-5">
               {features.map((feature, i) => {
-                return (
-                  <Card feature={feature} key={i} />
-                )
-              }
-              )}
+                return <Card feature={feature} key={i} />;
+              })}
             </div>
           </div>
           <div className="opacity-0 lg:opacity-100 flex items-end justify-center w-full lg:py-10">
@@ -98,6 +105,6 @@ export default function Default() {
           </p>
         </div>
       </div>
-    </AppContainer >
+    </AppContainer>
   );
-};
+}

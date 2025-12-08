@@ -1,14 +1,28 @@
-"use client"
+"use client";
 
-import { Field, Input, Toast, Toaster, ToastIntent, ToastPosition, ToastTitle, useId, useToastController } from "@fluentui/react-components";
+import {
+  Field,
+  Input,
+  Toast,
+  Toaster,
+  type ToastIntent,
+  type ToastPosition,
+  ToastTitle,
+  useId,
+  useToastController,
+} from "@fluentui/react-components";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 const CreateCase = () => {
   const router = useRouter();
-  const toasterId = useId("toaster-id")
-  const { dispatchToast } = useToastController(toasterId)
-  const ToastMessage = (message: string, intent: ToastIntent = "success", position: ToastPosition = "bottom-end") => {
+  const toasterId = useId("toaster-id");
+  const { dispatchToast } = useToastController(toasterId);
+  const ToastMessage = (
+    message: string,
+    intent: ToastIntent = "success",
+    position: ToastPosition = "bottom-end",
+  ) => {
     dispatchToast(
       <>
         <Toast>
@@ -18,8 +32,9 @@ const CreateCase = () => {
       {
         intent,
         position: position,
-      });
-  }
+      },
+    );
+  };
 
   const [formData, setFormData] = useState({
     title: "",
@@ -36,7 +51,7 @@ const CreateCase = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleMainDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,15 +60,17 @@ const CreateCase = () => {
     }
   };
 
-  const handleSupportingDocumentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSupportingDocumentsChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      setSupportingDocuments(prev => [...prev, ...newFiles]);
+      setSupportingDocuments((prev) => [...prev, ...newFiles]);
     }
   };
 
   const removeSupportingDocument = (index: number) => {
-    setSupportingDocuments(prev => prev.filter((_, i) => i !== index));
+    setSupportingDocuments((prev) => prev.filter((_, i) => i !== index));
   };
 
   const resetMainDocument = () => {
@@ -81,18 +98,21 @@ const CreateCase = () => {
       submitData.append(`supporting_documents`, file);
     });
     try {
-      const res: Response = await fetch(`/api/v1/case/create?title=${formData.title}&address=${formData.address}`, {
-        method: 'POST',
-        body: submitData,
-        headers: {
-          'Accept': 'application/json',
+      const res: Response = await fetch(
+        `/api/v1/case/create?title=${formData.title}&address=${formData.address}`,
+        {
+          method: "POST",
+          body: submitData,
+          headers: {
+            Accept: "application/json",
+          },
+          credentials: "include",
         },
-        credentials: 'include',
-      });
+      );
       if (res.ok) {
-        const data:any = await res.json();
+        const data: any = await res.json();
         const case_id = data.case_id;
-        router.push(`/home/case/${case_id}`)
+        router.push(`/home/case/${case_id}`);
       } else {
         ToastMessage("Error creating case. Please try again.", "error");
       }
@@ -107,7 +127,9 @@ const CreateCase = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="min-w-14 md:1/2 max-w-2xl p-6 bg-white rounded-lg shadow">
         <Toaster toasterId={toasterId} />
-        <h1 className="text-2xl font-bold mb-6 text-center">Create a New Case</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Create a New Case
+        </h1>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-2">
@@ -119,7 +141,6 @@ const CreateCase = () => {
                 required
                 appearance="underline"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-
                 value={formData.title}
                 onChange={handleInputChange}
               />
@@ -198,10 +219,15 @@ const CreateCase = () => {
 
                 {supportingDocuments.length > 0 && (
                   <div className="mt-3 space-y-2 max-h-40 overflow-y-auto">
-                    <p className="text-sm font-medium text-gray-700">Selected files:</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      Selected files:
+                    </p>
                     <ul className="text-sm">
                       {supportingDocuments.map((file, index) => (
-                        <li key={index} className="flex justify-between items-center py-1">
+                        <li
+                          key={index}
+                          className="flex justify-between items-center py-1"
+                        >
                           <span className="truncate max-w-xs">{file.name}</span>
                           <button
                             type="button"
@@ -231,14 +257,14 @@ const CreateCase = () => {
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={loading}
             >
-              {loading ? 'Creating case...' : 'Create Case'}
+              {loading ? "Creating case..." : "Create Case"}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default function Page() {
   return (

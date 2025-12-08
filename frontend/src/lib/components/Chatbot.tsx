@@ -1,17 +1,25 @@
-import { Chat, ChatHistoryResponse, ChatResponse } from '@/lib/validators/types';
-import { Button, Textarea, TextareaOnChangeData } from '@fluentui/react-components';
-import { ArrowUpRegular } from '@fluentui/react-icons';
-import { ChangeEvent, useEffect, useState } from 'react';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import {
+  Button,
+  Textarea,
+  type TextareaOnChangeData,
+} from "@fluentui/react-components";
+import { ArrowUpRegular } from "@fluentui/react-icons";
+import { type ChangeEvent, useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import type {
+  Chat,
+  ChatHistoryResponse,
+  ChatResponse,
+} from "@/lib/validators/types";
 
 export const ChatUI = ({ caseId }: { caseId: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>("");
   const [chatHistory, setChatHistory] = useState<Chat[]>([
     {
-      content: 'Welcome to the AI Chatbot! How can I assist you today?',
-      type: 'response',
+      content: "Welcome to the AI Chatbot! How can I assist you today?",
+      type: "response",
     },
   ]);
   const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -26,37 +34,38 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
 
     const userChat: Chat = {
       content: query,
-      type: 'query',
+      type: "query",
     };
     setChatHistory((prev) => [...prev, userChat]);
     setIsFetching(true);
 
     const form = new FormData();
-    form.append('case_id', caseId);
-    form.append('query', userChat.content);
+    form.append("case_id", caseId);
+    form.append("query", userChat.content);
 
-    const res: Response = await fetch('/api/v1/chatbot/chat', {
-      method: 'POST',
+    const res: Response = await fetch("/api/v1/chatbot/chat", {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
+        Accept: "application/json",
       },
       body: form,
-      credentials: 'include',
+      credentials: "include",
     });
 
     if (res.ok) {
       await res.json().then((chatResponse: ChatResponse) => {
         const responseChat: Chat = {
           content: chatResponse.response.content,
-          type: 'response',
+          type: "response",
         };
         setChatHistory((prev) => [...prev, responseChat]);
       });
       await fetchChatHistory();
     } else {
       const errorChat: Chat = {
-        content: "Sorry, I couldn't process your request. Please try again later.",
-        type: 'response',
+        content:
+          "Sorry, I couldn't process your request. Please try again later.",
+        type: "response",
       };
       setChatHistory((prev) => [...prev, errorChat]);
     }
@@ -67,11 +76,11 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
     setIsLoading(true);
     try {
       const res: Response = await fetch(`/api/v1/case/${caseId}/chats`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
       if (res.ok) {
         const apiData = await res.json();
@@ -81,30 +90,32 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
           data.chats.forEach((chat: ChatResponse) => {
             const queryChat: Chat = {
               content: chat.query.content,
-              type: 'query',
+              type: "query",
             };
             const responseChat: Chat = {
               content: chat.response.content,
-              type: 'response',
+              type: "response",
             };
             newChatHistory.push(queryChat, responseChat);
           });
         }
-        setChatHistory(newChatHistory.length > 0 ? newChatHistory : chatHistory);
+        setChatHistory(
+          newChatHistory.length > 0 ? newChatHistory : chatHistory,
+        );
       } else {
         setChatHistory([
           {
-            content: 'Failed to fetch chat history.',
-            type: 'response',
+            content: "Failed to fetch chat history.",
+            type: "response",
           },
         ]);
       }
     } catch (error) {
-      console.error('Failed to fetch chat history:', error);
+      console.error("Failed to fetch chat history:", error);
       setChatHistory([
         {
-          content: 'Failed to fetch chat history.',
-          type: 'response',
+          content: "Failed to fetch chat history.",
+          type: "response",
         },
       ]);
     } finally {
@@ -113,20 +124,21 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
   };
 
   const renderChatBubble = (chat: Chat, index: number) => {
-    const isUser = chat.type === 'query';
+    const isUser = chat.type === "query";
 
     return (
-      <div key={index} className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+      <div
+        key={index}
+        className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}
+      >
         <div
           className={`max-w-[70%] rounded-lg px-4 py-2 ${
             isUser
-              ? 'bg-blue-500 text-white rounded-br-none whitespace-pre-wrap'
-              : 'bg-gray-200 text-gray-800 rounded-bl-none whitespace-pre-wrap'
+              ? "bg-blue-500 text-white rounded-br-none whitespace-pre-wrap"
+              : "bg-gray-200 text-gray-800 rounded-bl-none whitespace-pre-wrap"
           }`}
         >
-          <Markdown remarkPlugins={[remarkGfm]}>
-            {chat.content}
-          </Markdown>
+          <Markdown remarkPlugins={[remarkGfm]}>{chat.content}</Markdown>
         </div>
       </div>
     );
@@ -153,7 +165,11 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
                   <p>No messages yet. Start a conversation!</p>
                 </div>
               ) : (
-                <>{chatHistory.map((chat, index) => renderChatBubble(chat, index))}</>
+                <>
+                  {chatHistory.map((chat, index) =>
+                    renderChatBubble(chat, index),
+                  )}
+                </>
               )}
               {isFetching && (
                 <div className="flex justify-start mb-4">
@@ -162,11 +178,11 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
                       <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                       <div
                         className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                        style={{ animationDelay: '0.2s' }}
+                        style={{ animationDelay: "0.2s" }}
                       ></div>
                       <div
                         className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                        style={{ animationDelay: '0.4s' }}
+                        style={{ animationDelay: "0.4s" }}
                       ></div>
                     </div>
                   </div>
@@ -176,18 +192,29 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
           )}
         </div>
         <div className="bg-gray-100 border-t-2 flex-1">
-          <form className="flex items-center p-3 gap-3 h-full" onSubmit={handleSubmit}>
+          <form
+            className="flex items-center p-3 gap-3 h-full"
+            onSubmit={handleSubmit}
+          >
             <Textarea
               type="text"
               placeholder="Type your message..."
               resize="vertical"
               size="medium"
               className="flex-1"
-              onChange={(_: ChangeEvent<HTMLTextAreaElement>, data: TextareaOnChangeData) => {
+              onChange={(
+                _: ChangeEvent<HTMLTextAreaElement>,
+                data: TextareaOnChangeData,
+              ) => {
                 setQuery(data.value);
               }}
             />
-            <Button appearance="primary" type="submit" shape="circular" disabled={isFetching}>
+            <Button
+              appearance="primary"
+              type="submit"
+              shape="circular"
+              disabled={isFetching}
+            >
               <span>Send</span>
               <ArrowUpRegular />
             </Button>

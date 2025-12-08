@@ -1,13 +1,22 @@
 import {
   Button,
-  Dialog, DialogContent, DialogSurface, DialogTitle, DialogTrigger,
-  Field, Input, Spinner,
+  Dialog,
+  DialogContent,
+  DialogSurface,
+  DialogTitle,
+  DialogTrigger,
+  Field,
+  Input,
+  Spinner,
   Toast,
   ToastBody,
-  Toaster, ToastIntent, ToastPosition, ToastTitle,
+  Toaster,
+  type ToastIntent,
+  type ToastPosition,
+  ToastTitle,
   useId,
   useRestoreFocusTarget,
-  useToastController
+  useToastController,
 } from "@fluentui/react-components";
 import { AddCircleRegular } from "@fluentui/react-icons";
 import { useRouter } from "next/navigation";
@@ -16,12 +25,15 @@ import { isMobileDevice } from "../utils";
 
 export const CreateCase = () => {
   const router = useRouter();
-  const toasterId = useId("toaster-id")
-  const { dispatchToast } = useToastController(toasterId)
+  const toasterId = useId("toaster-id");
+  const { dispatchToast } = useToastController(toasterId);
   const ToastMessage = (
-    { message, description }: { message: string; description?: string | undefined },
+    {
+      message,
+      description,
+    }: { message: string; description?: string | undefined },
     intent: ToastIntent,
-    position: ToastPosition = isMobileDevice() ? 'top' : 'bottom-end'
+    position: ToastPosition = isMobileDevice() ? "top" : "bottom-end",
   ) => {
     dispatchToast(
       <>
@@ -33,7 +45,7 @@ export const CreateCase = () => {
       {
         intent,
         position,
-      }
+      },
     );
   };
 
@@ -55,7 +67,7 @@ export const CreateCase = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleMainDocumentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,15 +76,17 @@ export const CreateCase = () => {
     }
   };
 
-  const handleSupportingDocumentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSupportingDocumentsChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      setSupportingDocuments(prev => [...prev, ...newFiles]);
+      setSupportingDocuments((prev) => [...prev, ...newFiles]);
     }
   };
 
   const removeSupportingDocument = (index: number) => {
-    setSupportingDocuments(prev => prev.filter((_, i) => i !== index));
+    setSupportingDocuments((prev) => prev.filter((_, i) => i !== index));
   };
 
   const resetMainDocument = () => {
@@ -100,27 +114,46 @@ export const CreateCase = () => {
       submitData.append(`supporting_documents`, file);
     });
 
-    ToastMessage({ message: "Creating case, please wait...", description: "Kindly wait while we process your request. You will be redirected automatically" }, "info");
-    await fetch(`/api/v1/case/create?title=${formData.title}&address=${formData.address}`, {
-      method: 'POST',
-      body: submitData,
-      headers: {
-        'Accept': 'application/json',
+    ToastMessage(
+      {
+        message: "Creating case, please wait...",
+        description:
+          "Kindly wait while we process your request. You will be redirected automatically",
       },
-      credentials: 'include',
-    })
+      "info",
+    );
+    await fetch(
+      `/api/v1/case/create?title=${formData.title}&address=${formData.address}`,
+      {
+        method: "POST",
+        body: submitData,
+        headers: {
+          Accept: "application/json",
+        },
+        credentials: "include",
+      },
+    )
       .then((res) => {
         if (res.ok) {
-          return res.json().then(data => {
+          return res.json().then((data) => {
             setIsDialogOpen(false);
-            router.push(`/home/case/${data.case_id}`)
+            router.push(`/home/case/${data.case_id}`);
           });
         } else {
-          ToastMessage({ message: "Error creating case. Please try again.", description: "If the problem persists, contact support." }, "error");
+          ToastMessage(
+            {
+              message: "Error creating case. Please try again.",
+              description: "If the problem persists, contact support.",
+            },
+            "error",
+          );
         }
       })
       .catch(() => {
-        ToastMessage({ message: "An unexpected error occurred. Please try again." }, "error");
+        ToastMessage(
+          { message: "An unexpected error occurred. Please try again." },
+          "error",
+        );
       })
       .finally(() => {
         setLoading(false);
@@ -138,25 +171,32 @@ export const CreateCase = () => {
     if (supportingDocumentsRef.current) {
       supportingDocumentsRef.current.value = "";
     }
-  }
+  };
 
   return (
-    <Dialog modalType="alert" open={isDialogOpen} onOpenChange={(_, data) => {
-      if (!data.open) {
-        handleDialogClose();
-      }
-    }}>
+    <Dialog
+      modalType="alert"
+      open={isDialogOpen}
+      onOpenChange={(_, data) => {
+        if (!data.open) {
+          handleDialogClose();
+        }
+      }}
+    >
       <DialogTrigger disableButtonEnhancement>
-        <Button appearance="primary" {...restoreFocusTarget} onClick={() => setIsDialogOpen(true)}>
+        <Button
+          appearance="primary"
+          {...restoreFocusTarget}
+          onClick={() => setIsDialogOpen(true)}
+        >
           <span className="flex items-center gap-2">
-            <AddCircleRegular /><span>Create Case</span>
+            <AddCircleRegular />
+            <span>Create Case</span>
           </span>
         </Button>
       </DialogTrigger>
       <DialogSurface>
-        <DialogTitle>
-          Create New Case
-        </DialogTitle>
+        <DialogTitle>Create New Case</DialogTitle>
         <DialogContent>
           <div className="flex items-center justify-center bg-gray-50 w-full">
             <div className="w-full p-6 bg-white rounded-lg shadow">
@@ -171,7 +211,6 @@ export const CreateCase = () => {
                       required
                       appearance="underline"
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-
                       value={formData.title}
                       onChange={handleInputChange}
                     />
@@ -236,7 +275,9 @@ export const CreateCase = () => {
                         onChange={handleSupportingDocumentsChange}
                       />
                       <div className="flex justify-between items-center text-sm text-gray-500 mt-2">
-                        <span>Selected files: {supportingDocuments.length}</span>
+                        <span>
+                          Selected files: {supportingDocuments.length}
+                        </span>
                         {supportingDocuments.length > 0 && (
                           <button
                             type="button"
@@ -250,14 +291,23 @@ export const CreateCase = () => {
 
                       {supportingDocuments.length > 0 && (
                         <div className="mt-3 space-y-2 max-h-40 overflow-y-auto">
-                          <p className="text-sm font-medium text-gray-700">Selected files:</p>
+                          <p className="text-sm font-medium text-gray-700">
+                            Selected files:
+                          </p>
                           <ul className="text-sm">
                             {supportingDocuments.map((file, index) => (
-                              <li key={index} className="flex justify-between items-center py-1">
-                                <span className="truncate max-w-xs">{file.name}</span>
+                              <li
+                                key={index}
+                                className="flex justify-between items-center py-1"
+                              >
+                                <span className="truncate max-w-xs">
+                                  {file.name}
+                                </span>
                                 <button
                                   type="button"
-                                  onClick={() => removeSupportingDocument(index)}
+                                  onClick={() =>
+                                    removeSupportingDocument(index)
+                                  }
                                   className="text-red-500 hover:text-red-700 focus:outline-none ml-2"
                                 >
                                   x
@@ -273,23 +323,19 @@ export const CreateCase = () => {
 
                 <div className="flex justify-end gap-3">
                   <DialogTrigger disableButtonEnhancement>
-                    <Button
-                      appearance="secondary"
-                      disabled={loading}
-                    >
+                    <Button appearance="secondary" disabled={loading}>
                       Cancel
                     </Button>
                   </DialogTrigger>
-                  <Button
-                    type="submit"
-                    appearance="primary"
-                    disabled={loading}
-                  >
+                  <Button type="submit" appearance="primary" disabled={loading}>
                     {loading ? (
                       <div className="flex items-center gap-2">
-                        <Spinner size="extra-tiny" /> <span>Creating case...</span>
+                        <Spinner size="extra-tiny" />{" "}
+                        <span>Creating case...</span>
                       </div>
-                    ) : 'Create Case'}
+                    ) : (
+                      "Create Case"
+                    )}
                   </Button>
                 </div>
               </form>
@@ -299,7 +345,7 @@ export const CreateCase = () => {
       </DialogSurface>
     </Dialog>
   );
-}
+};
 
 export default function Page() {
   return (

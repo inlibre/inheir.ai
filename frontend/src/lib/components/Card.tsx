@@ -1,6 +1,6 @@
-import { FeatureData } from "@/lib/validators/types";
+import type { FeatureData } from "@/lib/validators/types";
 
-export const Card = ({ feature }: { feature: FeatureData; }) => {
+export const Card = ({ feature }: { feature: FeatureData }) => {
   return (
     <>
       <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-2xl hover:bg-gray-100 hover:-translate-y-0.5 transition duration-250">
@@ -10,5 +10,5 @@ export const Card = ({ feature }: { feature: FeatureData; }) => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

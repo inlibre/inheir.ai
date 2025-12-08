@@ -1,39 +1,36 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
 import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHeaderCell,
   Avatar,
-  Tooltip,
-  Text,
-  Menu,
-  MenuTrigger,
   Button,
-  MenuPopover,
-  MenuList,
-  MenuItem,
   Dialog,
-  DialogSurface,
-  DialogBody,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogBody,
+  DialogContent,
+  DialogSurface,
+  DialogTitle,
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuPopover,
+  MenuTrigger,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableHeaderCell,
+  TableRow,
+  Text,
   Textarea,
-} from '@fluentui/react-components';
+  Tooltip,
+} from "@fluentui/react-components";
 import {
   Checkmark24Regular,
   Dismiss24Regular,
   Mail24Regular,
   MoreHorizontal24Regular,
-} from '@fluentui/react-icons';
-
-import {
-  useRouter
-} from 'next/navigation';
+} from "@fluentui/react-icons";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Report = {
   id: string;
@@ -41,7 +38,7 @@ type Report = {
   address: string;
   email?: string;
   report: string;
-  verdict: 'Pending' | 'Verified' | 'Not Verified';
+  verdict: "Pending" | "Verified" | "Not Verified";
   reason?: string;
   user_id: string;
 };
@@ -51,7 +48,7 @@ type ReportApiResponse = {
   data: Report[];
 };
 
-type ActionType = 'verify' | 'unverify';
+type ActionType = "verify" | "unverify";
 
 export default function ReportDashboard() {
   const router = useRouter();
@@ -59,33 +56,37 @@ export default function ReportDashboard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [actionType, setActionType] = useState<ActionType | null>(null);
-  const [reason, setReason] = useState('');
-  const [expandedReports, setExpandedReports] = useState<Record<string, boolean>>({});
-  const [expandedReasons, setExpandedReasons] = useState<Record<string, boolean>>({});
+  const [reason, setReason] = useState("");
+  const [expandedReports, setExpandedReports] = useState<
+    Record<string, boolean>
+  >({});
+  const [expandedReasons, setExpandedReasons] = useState<
+    Record<string, boolean>
+  >({});
 
   const [successModalOpen, setSuccessModalOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
-    fetch('/api/v1/report/all', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+    fetch("/api/v1/report/all", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
     })
       .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch reports');
+        if (!res.ok) throw new Error("Failed to fetch reports");
         return res.json();
       })
       .then((json: ReportApiResponse) => setReports(json.data))
       .catch((err) => {
-        router.push('/')
+        router.push("/");
       });
   }, []);
 
   const openDialog = (report: Report, action: ActionType) => {
     setSelectedReport(report);
     setActionType(action);
-    setReason(report.reason || '');
+    setReason(report.reason || "");
     setDialogOpen(true);
   };
 
@@ -93,47 +94,50 @@ export default function ReportDashboard() {
     setDialogOpen(false);
     setSelectedReport(null);
     setActionType(null);
-    setReason('');
+    setReason("");
   };
 
   const submitReason = async () => {
     if (!selectedReport || !actionType) return;
     try {
-      const res = await fetch(`/api/v1/report/${selectedReport.id}/${actionType}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ reason }),
-      });
+      const res = await fetch(
+        `/api/v1/report/${selectedReport.id}/${actionType}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ reason }),
+        },
+      );
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.detail || 'Failed to update report');
+        throw new Error(errorData.detail || "Failed to update report");
       }
       setReports((prev) =>
         prev.map((r) =>
           r.id === selectedReport.id
             ? {
                 ...r,
-                verdict: actionType === 'verify' ? 'Verified' : 'Not Verified',
+                verdict: actionType === "verify" ? "Verified" : "Not Verified",
                 reason,
               }
-            : r
-        )
+            : r,
+        ),
       );
       closeDialog();
 
       // Show success modal:
       setSuccessMessage(
-        actionType === 'verify'
-          ? 'Successfully marked as Verified.'
-          : 'Successfully marked as Not Verified.'
+        actionType === "verify"
+          ? "Successfully marked as Verified."
+          : "Successfully marked as Not Verified.",
       );
       setSuccessModalOpen(true);
 
       // Auto close success modal after 3 seconds
       setTimeout(() => setSuccessModalOpen(false), 3000);
     } catch (err: any) {
-      alert('Error: ' + err.message);
+      alert("Error: " + err.message);
     }
   };
 
@@ -160,10 +164,12 @@ export default function ReportDashboard() {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Avatar
-                        name={r.full_name || 'Anonymous'}
-                        initials={r.full_name?.[0]?.toUpperCase() || '🕵️'}
+                        name={r.full_name || "Anonymous"}
+                        initials={r.full_name?.[0]?.toUpperCase() || "🕵️"}
                       />
-                      <span className="text-sm text-gray-900">{r.full_name || 'Anonymous'}</span>
+                      <span className="text-sm text-gray-900">
+                        {r.full_name || "Anonymous"}
+                      </span>
                     </div>
                   </TableCell>
 
@@ -180,17 +186,22 @@ export default function ReportDashboard() {
 
                   <TableCell>
                     <div className="text-sm text-gray-800 whitespace-pre-line">
-                      <div className={expandedReports[r.id] ? '' : 'line-clamp-2'}>
-                        {r.report || '—'}
+                      <div
+                        className={expandedReports[r.id] ? "" : "line-clamp-2"}
+                      >
+                        {r.report || "—"}
                       </div>
                       {r.report && r.report.length > 20 && (
                         <button
                           onClick={() =>
-                            setExpandedReports((prev) => ({ ...prev, [r.id]: !prev[r.id] }))
+                            setExpandedReports((prev) => ({
+                              ...prev,
+                              [r.id]: !prev[r.id],
+                            }))
                           }
                           className="text-blue-600 hover:underline text-xs mt-1"
                         >
-                          {expandedReports[r.id] ? 'Show less' : 'Show more'}
+                          {expandedReports[r.id] ? "Show less" : "Show more"}
                         </button>
                       )}
                     </div>
@@ -200,38 +211,41 @@ export default function ReportDashboard() {
                     <span
                       className={`inline-block px-3 py-1 text-sm font-semibold rounded-full
                       ${
-                        r.verdict === 'Verified'
-                          ? 'bg-green-100 text-green-800'
-                          : r.verdict === 'Pending'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : r.verdict === 'Not Verified'
-                              ? 'bg-red-100 text-red-800'
-                              : 'bg-gray-100 text-gray-800'
+                        r.verdict === "Verified"
+                          ? "bg-green-100 text-green-800"
+                          : r.verdict === "Pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : r.verdict === "Not Verified"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-gray-100 text-gray-800"
                       }`}
                     >
                       {r.verdict}
                     </span>
                   </TableCell>
 
-
                   <TableCell>
                     <div className="text-sm text-gray-800 whitespace-pre-line">
-                      <div className={expandedReasons[r.id] ? '' : 'line-clamp-2'}>
-                        {r.reason || '—'}
+                      <div
+                        className={expandedReasons[r.id] ? "" : "line-clamp-2"}
+                      >
+                        {r.reason || "—"}
                       </div>
                       {r.reason && r.reason.length > 20 && (
                         <button
                           onClick={() =>
-                            setExpandedReasons((prev) => ({ ...prev, [r.id]: !prev[r.id] }))
+                            setExpandedReasons((prev) => ({
+                              ...prev,
+                              [r.id]: !prev[r.id],
+                            }))
                           }
                           className="text-blue-600 hover:underline text-xs mt-1"
                         >
-                          {expandedReasons[r.id] ? 'Show less' : 'Show more'}
+                          {expandedReasons[r.id] ? "Show less" : "Show more"}
                         </button>
                       )}
                     </div>
                   </TableCell>
-
 
                   <TableCell>
                     {r.email ? (
@@ -239,7 +253,7 @@ export default function ReportDashboard() {
                         <Tooltip content={r.email} relationship="label">
                           <a
                             href={`mailto:${r.email}`}
-                            aria-label={`Email ${r.full_name || 'user'}`}
+                            aria-label={`Email ${r.full_name || "user"}`}
                             className="flex items-center"
                           >
                             <Mail24Regular />
@@ -260,21 +274,25 @@ export default function ReportDashboard() {
                           icon={<MoreHorizontal24Regular />}
                           aria-label="More actions"
                           className="ml-auto"
-                          disabled={r.verdict !== 'Pending'}
+                          disabled={r.verdict !== "Pending"}
                         />
                       </MenuTrigger>
-                      {r.verdict === 'Pending' && (
+                      {r.verdict === "Pending" && (
                         <MenuPopover>
                           <MenuList>
                             <MenuItem
-                              icon={<Checkmark24Regular className="text-green-600" />}
-                              onClick={() => openDialog(r, 'verify')}
+                              icon={
+                                <Checkmark24Regular className="text-green-600" />
+                              }
+                              onClick={() => openDialog(r, "verify")}
                             >
                               Verify
                             </MenuItem>
                             <MenuItem
-                              icon={<Dismiss24Regular className="text-red-600" />}
-                              onClick={() => openDialog(r, 'unverify')}
+                              icon={
+                                <Dismiss24Regular className="text-red-600" />
+                              }
+                              onClick={() => openDialog(r, "unverify")}
                             >
                               Unverify
                             </MenuItem>
@@ -290,15 +308,18 @@ export default function ReportDashboard() {
         </div>
 
         {/* Reason dialog */}
-        <Dialog open={dialogOpen} onOpenChange={(_, data) => setDialogOpen(data.open)}>
+        <Dialog
+          open={dialogOpen}
+          onOpenChange={(_, data) => setDialogOpen(data.open)}
+        >
           <DialogSurface>
             <DialogBody>
               <DialogTitle>
-                {actionType === 'verify'
-                  ? 'Verify Report'
-                  : actionType === 'unverify'
-                    ? 'Unverify Report'
-                    : ''}
+                {actionType === "verify"
+                  ? "Verify Report"
+                  : actionType === "unverify"
+                    ? "Unverify Report"
+                    : ""}
               </DialogTitle>
               <DialogContent>
                 <Textarea
@@ -330,7 +351,10 @@ export default function ReportDashboard() {
         </Dialog>
 
         {/* Success Confirmation Dialog */}
-        <Dialog open={successModalOpen} onOpenChange={(_, data) => setSuccessModalOpen(data.open)}>
+        <Dialog
+          open={successModalOpen}
+          onOpenChange={(_, data) => setSuccessModalOpen(data.open)}
+        >
           <DialogSurface>
             <DialogBody>
               <DialogTitle>Success</DialogTitle>
@@ -338,7 +362,10 @@ export default function ReportDashboard() {
                 <Text>{successMessage}</Text>
               </DialogContent>
               <DialogActions>
-                <Button appearance="primary" onClick={() => setSuccessModalOpen(false)}>
+                <Button
+                  appearance="primary"
+                  onClick={() => setSuccessModalOpen(false)}
+                >
                   Close
                 </Button>
               </DialogActions>

@@ -1,5 +1,5 @@
-import * as v from 'valibot';
-import { SignInSchema, SignUpSchema } from './schema';
+import type * as v from "valibot";
+import type { SignInSchema, SignUpSchema } from "./schema";
 
 export type SignUpData = v.InferInput<typeof SignUpSchema>;
 export type SignInData = v.InferInput<typeof SignInSchema>;
@@ -7,12 +7,12 @@ export type SignInData = v.InferInput<typeof SignInSchema>;
 export type FeatureData = {
   title: string;
   description: string;
-}
+};
 
 export type Coordinates = {
   latitude: number;
   longitude: number;
-}
+};
 
 export type ChatHistory = {
   query: string;
@@ -32,42 +32,42 @@ export type ChatResponse = {
     role: string;
     content: string;
   };
-}
+};
 
 export type Chat = {
   content: string;
-  type: 'query' | 'response';
-}
+  type: "query" | "response";
+};
 
 export type ChatHistoryResponse = {
   chats: ChatResponse[];
   status: string;
   success: string;
   reason: string | null;
-}
+};
 
-export type CaseTabs = 'chatbot' | 'gis' | 'summary';
+export type CaseTabs = "chatbot" | "gis" | "summary";
 
 export type CaseData = {
   meta: CaseResponse;
   summary: CaseSummary;
-}
+};
 
 export type CaseMetaResponse = {
   cases: CaseResponse[];
   status: string;
   success: string;
   reason: string | null;
-}
+};
 
 export type CaseResponse = {
   case_id: string;
   title: string;
   status: CaseStatus;
   created_at: string;
-}
+};
 
-export type CaseStatus = 'Open' | 'Resolved' | 'Aborted'
+export type CaseStatus = "Open" | "Resolved" | "Aborted";
 
 export type CaseSummary = {
   case_id: string;
@@ -82,13 +82,13 @@ export type CaseSummary = {
   recommendations: string[] | null;
   references: string[] | null;
   remarks: string | null;
-}
+};
 
 export type Entity = {
   name: string;
   entity_type: string;
   valid: boolean;
-}
+};
 
 export type Asset = {
   name: string;
@@ -96,7 +96,7 @@ export type Asset = {
   asset_type: string;
   net_worth: string | null;
   coordinates: string | null;
-}
+};
 
 export type GISResponse = {
   property_buying_risk: number;

@@ -1,18 +1,38 @@
-"use client"
+"use client";
 
-import AppContainer from "@/lib/components/AppContainer";
-import { Cases } from "@/lib/components/Cases";
-import { clearItems, getItem, isSignedOut } from "@/lib/utils";
-import { Button, Hamburger, NavDrawer, NavDrawerBody, NavDrawerFooter, NavDrawerHeader, NavSectionHeader, Toast, Toaster, ToastIntent, ToastPosition, ToastTitle, useId, useToastController } from "@fluentui/react-components";
+import {
+  Button,
+  Hamburger,
+  NavDrawer,
+  NavDrawerBody,
+  NavDrawerFooter,
+  NavDrawerHeader,
+  NavSectionHeader,
+  Toast,
+  Toaster,
+  type ToastIntent,
+  type ToastPosition,
+  ToastTitle,
+  useId,
+  useToastController,
+} from "@fluentui/react-components";
 import { ArrowExit20Regular, HomeFilled } from "@fluentui/react-icons";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { setTimeout } from "timers";
+import AppContainer from "@/lib/components/AppContainer";
+import { Cases } from "@/lib/components/Cases";
+import { clearItems, getItem, isSignedOut } from "@/lib/utils";
+
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
-  const toasterId = useId("toaster-id")
-  const { dispatchToast } = useToastController(toasterId)
-  const ToastMessage = (message: string, intent: ToastIntent = "success", position: ToastPosition = "bottom-end") => {
+  const router = useRouter();
+  const toasterId = useId("toaster-id");
+  const { dispatchToast } = useToastController(toasterId);
+  const ToastMessage = (
+    message: string,
+    intent: ToastIntent = "success",
+    position: ToastPosition = "bottom-end",
+  ) => {
     dispatchToast(
       <>
         <Toast>
@@ -22,28 +42,29 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
       {
         intent,
         position: position,
-      });
-  }
+      },
+    );
+  };
 
   const [userName, setUserName] = useState<string>("User");
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
   const logoutHandler = async () => {
-    const res: Response = await fetch('/api/v1/auth/sign_out', {
+    const res: Response = await fetch("/api/v1/auth/sign_out", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-    })
-    ToastMessage("Logging out successfully!",)
+    });
+    ToastMessage("Logging out successfully!");
     if (res.ok) {
       setTimeout(() => {
         clearItems();
         router.push("/");
-      }, 300)
+      }, 300);
     }
-  }
+  };
 
   const [isNavBar, setNavBar] = useState<boolean>(false);
 
@@ -70,24 +91,17 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
         if (data && data.is_admin) setIsAdmin(true);
       })
       .catch(() => setIsAdmin(false));
-  }, [])
+  }, []);
 
   return (
     <AppContainer>
       <Toaster toasterId={toasterId} />
       <div className="flex flex-col lg:flex-row w-full min-h-screen">
         <div className="w-full lg:w-1/32 border-b-2 lg:border-b-0 lg:border-r-2 bg-gray-300 flex items-center justify-center">
-          <Hamburger
-            size="large"
-            onClick={() => setNavBar(!isNavBar)}
-          />
+          <Hamburger size="large" onClick={() => setNavBar(!isNavBar)} />
         </div>
-        <NavDrawer
-          open={isNavBar}
-        >
-          <NavDrawerHeader
-            className="border-b-2 border-r-2"
-          >
+        <NavDrawer open={isNavBar}>
+          <NavDrawerHeader className="border-b-2 border-r-2">
             <div className="flex flex-col my-5 gap-y-3 flex-nowrap">
               <div className="flex flex-row justify-between">
                 <Hamburger
@@ -107,14 +121,16 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
                 </Button>
               </div>
               <div>
-                <h1 className="text-lg lg:text-2xl font-semibold">Welcome to Inheir.ai</h1>
+                <h1 className="text-lg lg:text-2xl font-semibold">
+                  Welcome to Inheir.ai
+                </h1>
                 <span className="text-md lg:text-xl">{userName}</span>
               </div>
               <Button
                 appearance="primary"
                 size="medium"
                 className="mb-2 w-full"
-                style={{ minHeight: '40px' }}
+                style={{ minHeight: "40px" }}
                 onClick={() => {
                   setNavBar(false);
                   router.push("/home/report");
@@ -127,7 +143,7 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
                   appearance="secondary"
                   size="medium"
                   className="mb-2 w-full"
-                  style={{ minHeight: '40px' }}
+                  style={{ minHeight: "40px" }}
                   onClick={() => {
                     setNavBar(false);
                     router.push("/home/report/dashboard");
@@ -139,7 +155,7 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
               <button
                 onClick={logoutHandler}
                 className="text-sm lg:text-lg text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition-colors flex items-center justify-center gap-2 mt-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400 w-full"
-                style={{ minHeight: '40px' }}
+                style={{ minHeight: "40px" }}
               >
                 <span className="w-full flex items-center justify-center gap-2">
                   Logout <ArrowExit20Regular />
@@ -147,20 +163,20 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
               </button>
             </div>
           </NavDrawerHeader>
-          <NavDrawerBody
-            className="border-r-2"
-          >
+          <NavDrawerBody className="border-r-2">
             <NavSectionHeader>
               <span className="text-lg lg:text-xl font-semibold">Cases</span>
             </NavSectionHeader>
             <Cases />
           </NavDrawerBody>
-          <NavDrawerFooter
-            className="border-t-2 border-r-2"
-          >
+          <NavDrawerFooter className="border-t-2 border-r-2">
             <div className="flex flex-col gap-y-2 m-3">
-              <span className="text-sm lg:text-md text-gray-500">Version 1.0.0</span>
-              <span className="text-sm lg:text-md text-gray-500">Copyright © 2025 Inheir.ai. All rights reserved.</span>
+              <span className="text-sm lg:text-md text-gray-500">
+                Version 1.0.0
+              </span>
+              <span className="text-sm lg:text-md text-gray-500">
+                Copyright © 2025 Inheir.ai. All rights reserved.
+              </span>
             </div>
           </NavDrawerFooter>
         </NavDrawer>
@@ -170,20 +186,16 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
               <h1 className="text-lg font-bold">Loading...</h1>
             </div>
           ) : (
-            <>
-              {children}
-            </>
+            <>{children}</>
           )}
         </div>
       </div>
     </AppContainer>
   );
-}
+};
 
-export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <Dashboard>
-      {children}
-    </Dashboard>
-  );
+export default function Layout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return <Dashboard>{children}</Dashboard>;
 }
