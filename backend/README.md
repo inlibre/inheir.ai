@@ -88,14 +88,14 @@ All endpoints are prefixed with `/api/v1/`.
 ### Prerequisites
 
 - Python 3.13+
-- Poetry (for dependency management)
+- uv (for dependency management)
 - MongoDB (running instance)
 - (Optional) Docker
 
 ### Install dependencies
 
 ```bash
-poetry install
+uv sync
 ```
 
 ### Environment Variables
@@ -114,6 +114,7 @@ Create a `.env` file or set the following variables:
 ### With Poetry
 
 ```bash
+source .venv/bin/activate # Activate virtual environment
 poetry run uvicorn inheir_backend.server:app --reload --host 0.0.0.0 --port 8000
 ```
 
@@ -191,7 +192,7 @@ docker run -p 8000:8000 \
   -v $(pwd)/certs:/certs \
   --env-file .env \
   inheir-backend \
-  poetry run python -m gunicorn -w 4 -k uvicorn.workers.UvicornWorker \
+  python -m gunicorn -w 4 -k uvicorn.workers.UvicornWorker \
     -b 0.0.0.0:8000 \
     --keyfile /certs/key.pem --certfile /certs/cert.pem inheir_backend.server:app
 ```
