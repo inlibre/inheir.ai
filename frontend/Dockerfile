@@ -1,4 +1,4 @@
-FROM oven/bun:1.2 AS builder
+FROM oven/bun:1.3 AS builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 RUN bun install --frozen-lockfile
 RUN bun run build
 
-FROM oven/bun:1.2 AS runner
+FROM oven/bun:1.3 AS runner
 
 ENV NODE_ENV=production
 
