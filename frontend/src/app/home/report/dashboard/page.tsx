@@ -277,7 +277,7 @@ export default function ReportDashboard() {
                           disabled={r.verdict !== "Pending"}
                         />
                       </MenuTrigger>
-                      {r.verdict === "Pending" && (
+                      {r.verdict === "Pending" ? (
                         <MenuPopover>
                           <MenuList>
                             <MenuItem
@@ -298,7 +298,7 @@ export default function ReportDashboard() {
                             </MenuItem>
                           </MenuList>
                         </MenuPopover>
-                      )}
+                      ): <></>}
                     </Menu>
                   </TableCell>
                 </TableRow>

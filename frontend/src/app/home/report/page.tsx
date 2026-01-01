@@ -138,7 +138,7 @@ const SubmitReport = () => {
                 id="report"
                 name="report"
                 required
-                maxHeight="8"
+                cols={8}
                 appearance="outline"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={formData.report}

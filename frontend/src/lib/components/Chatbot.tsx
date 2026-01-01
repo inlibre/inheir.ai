@@ -197,7 +197,6 @@ export const ChatUI = ({ caseId }: { caseId: string }) => {
             onSubmit={handleSubmit}
           >
             <Textarea
-              type="text"
               placeholder="Type your message..."
               resize="vertical"
               size="medium"
